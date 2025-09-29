@@ -33,7 +33,21 @@ const account4 = {
   pin: 4444,
 };
 
-const accounts = [account1, account2, account3, account4];
+const account5 = {
+  owner: 'Praptee Miller',
+  movements: [430, 1000, 700, 50, 90],
+  interestRate: 1,
+  pin: 1702,
+};
+
+const account6 = {
+  owner: 'Sanidhya Rao Somawar',
+  movements: [430, 1000, 700, 50, 90],
+  interestRate: 1,
+  pin: 2412,
+};
+
+const accounts = [account1, account2, account3, account4 , account5, account6];
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -82,5 +96,40 @@ movements.forEach(function(mov , i){
 };
 
 displayMovements(account1.movements);
+
+console.log(account5.movements);
+
+const createUsernames = function(accs){
+
+  accs.forEach( function (acc) {
+    acc.username = acc.owner.toLowerCase().split(" ").map( name => name[0]).join("");
+  });
+
+};
+
+createUsernames(accounts);
+console.log(accounts);
+
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+
+const deposits = movements.filter(function(mov , i , arr){
+
+  return mov > 0;
+
+});
+console.log(movements);
+console.log(deposits);
+
+const depositsFor = [];
+for (const mov of movements) if (mov > 0) depositsFor.push(mov);
+console.log(depositsFor);
+
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(withdrawals);
+
+
+
 
 /////////////////////////////////////////////////

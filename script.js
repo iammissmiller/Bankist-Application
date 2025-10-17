@@ -87,7 +87,7 @@ movements.forEach(function(mov , i){
   const html = 
   `<div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov} €</div>
     </div>`;
 
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -111,11 +111,46 @@ createUsernames(accounts);
 console.log(accounts);
 
 
+// EVENT HANDLER
+
+let currentAccount;
+
+btnLogin.addEventListener('click' , function(e) {
+
+  // Prevent form from submitting
+  e.preventDefault();
+
+  currentAccount =  accounts.find(acc => acc.username === inputLoginUsername.value);
+  console.log(currentAccount);
+
+  if (currentAccount.pin === Number(inputLoginPin.value)){
+
+    // Display UI and Message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(" ")[0]}`;
+    containerApp.style.opacity = 100;
+  }
+})
+
+
 const calcDisplayBalance = function(movements ){
 
   const balance = movements.reduce((acc , mov) => acc + mov , 0);
-  labelBalance.textContent =  `${balance} EUR`;
+  labelBalance.textContent =  `${balance} €`;
 };
+
+const calcDisplaySummary = function(movements){
+
+  const income = movements.filter(mov => mov > 0).reduce((acc,mov) => acc + mov , 0);
+  labelSumIn.textContent = `${income} €`
+
+  const out = movements.filter(mov => mov < 0).reduce((acc,mov) => acc + mov , 0 );
+  labelSumOut.textContent = `${Math.abs(out)} €`
+
+  const interest = movements.filter(mov => mov > 0).map(deposit => (deposit * 1.2) / 100).filter((int , i , arr) => {return int >= 1}).reduce((acc , int) => acc + int , 0);
+  labelSumInterest.textContent = `${interest} €`
+}
+
+calcDisplaySummary(account1.movements);
 
 calcDisplayBalance(account1.movements);
 
@@ -127,15 +162,31 @@ const deposits = movements.filter(function(mov , i , arr){
   return mov > 0;
 
 });
-console.log(movements);
-console.log(deposits);
+
 
 const depositsFor = [];
 for (const mov of movements) if (mov > 0) depositsFor.push(mov);
-console.log(depositsFor);
+
 
 const withdrawals = movements.filter(mov => mov < 0);
-console.log(withdrawals);
+
+
+
+// mAximum value 
+const max = movements.reduce((acc , mov) => {
+  if (acc > mov) return acc;
+  else return mov;
+}, movements[0]);
+
+
+
+const eurToUsd = 1.1;
+
+
+//PIPELINE
+const  totalDepositsUSD = movements.filter(mov => mov > 0).map((mov , i , arr) => {return mov * eurToUsd}).reduce((acc , mov) => acc + mov , 0);
+
+
 
 
 
